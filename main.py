@@ -69,6 +69,7 @@ def embedding_search(user_query, database_index, config) -> tuple:
     
     user_query_embedding = utils.embedding_invoke(user_query, config)
     user_query_embedding = np.array(user_query_embedding).reshape(1, -1)
+
     D, I = faiss_index.search(user_query_embedding, k = config.embedding_top_k)
 
     return I, D
@@ -91,9 +92,9 @@ def RRF(bm25_result, embedding_result, ):
     sorted_fusion_scores = sorted(fusion_scores.items(), key=lambda x: x[1], reverse=True)
     return sorted_fusion_scores
 
-def rewrite_query(messages : list, current_message : str):
+def rewrite_query(messages : list, current_message : str, config):
     
-    new_message = utils.llm_invoke(prompt.rewrite_prompt_v1.format(context = str(messages), question = current_message))
+    new_message = utils.llm_invoke(prompt.rewrite_prompt_v1.format(context = str(messages), question = current_message), config)
     return new_message
 
 def ReRanker_search(user_query, database_content, fusion_scores, config : utils.Config):
@@ -129,8 +130,9 @@ def main():
             continue
         
 
-        user_query = rewrite_query(messages, current_message)
+        user_query = rewrite_query(messages, current_message, config)
         print(user_query)
+        
 
         bm25_result = BM25_search(user_query, database_content, config)
         embedding_result = embedding_search(user_query, database_index, config)
@@ -152,7 +154,7 @@ def main():
         # 第二种加入历史的方式，是只加入提问和模型的回答
         messages.append({"role" : "user", "content" : user_query})
 
-        answear = utils.llm_invoke(prompt.prompt_v3.format(context=content, question=user_query))
+        answear = utils.llm_invoke(prompt.prompt_v3.format(context=content, question=user_query), config)
         print(content)
         print(answear)
         messages.append({"role" : "assistant", "content" : answear})
