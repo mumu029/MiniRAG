@@ -4,13 +4,23 @@ import json
 
 class Config:
     llm = OpenAI(
-        api_key="123",
-        base_url="http://127.0.0.1:8001/v1"
+        api_key="sk-FlBILdgNXRuEVga1dUCAKVTfefIpk70gsYMXBp1kGMntOoYd",
+        base_url="https://purple-newapi.lemongpt.top/v1"
     )
+    llm_name = "deepseek-ai/DeepSeek-V3"
+    # llm = OpenAI(
+    #     api_key="123",
+    #     base_url="http://127.0.0.1:8001/v1"
+    # )
+
+    
     embedding = OpenAI(
-        api_key="xxxxx",
+        api_key="47574ee5b23f4dbc54795df954f6844f.ZYw81XNiQIiybbOU",
         base_url="https://open.bigmodel.cn/api/paas/v4",
     )
+    embedding_name = "embedding-3"
+
+
     chunk_size = 1000
     overlap = 200
     folder_path = "/home/cx/demo_RAG/knowledge_base"
@@ -26,14 +36,14 @@ class Config:
 llm = Config.llm
 embedding = Config.embedding
 
-def llm_invoke(message: str) -> str:
+def llm_invoke(message: str, config) -> str:
     """
     This function demonstrates how to invoke the LLM API.
     """
     # Example of invoking the LLM API
     result = llm.chat.completions.create(
-        # model="deepseek-ai/DeepSeek-V3",
-        model = "Qwen3",
+        model=config.llm_name,
+        # model = "Qwen3",
         messages=[
             {
                 "role": "system",
@@ -44,8 +54,7 @@ def llm_invoke(message: str) -> str:
                 "content": message + " /no_think",
             }
         ],
-        temperature=0.1,
-        top_k = 3
+        temperature=0.1
     )
     return result.choices[0].message.content
 
@@ -71,8 +80,10 @@ def read_pdf_file(file_path: str, chunk_size = 0, overlap = 0) -> str:
 def updata_database(folder_path: str, config) -> dict:
 
     import os
+
     if not os.path.exists(os.path.join(folder_path, "chunk_txt")):
         os.makedirs(os.path.join(folder_path, "chunk_txt"))
+
     already_files = [x.split(".")[0] for x in os.listdir(os.path.join(folder_path, "chunk_txt"))]
     files = {}
     for file in os.listdir(os.path.join(folder_path, "source_file")):
@@ -100,7 +111,7 @@ def embedding_invoke(text: str, config) -> list:
     """
     # Example of invoking the embedding API
     result = embedding.embeddings.create(
-        model="embedding-3",
+        model=config.embedding_name,
         input=text,
         dimensions=config.embedding_dim
     )
