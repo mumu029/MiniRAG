@@ -14,7 +14,7 @@ pip install rank_bm25 jieba FlagEmbedding faiss-cpu
 ```
 此外还有一个ReRanker模型需要下载：https://www.modelscope.cn/models/BAAI/bge-reranker-v2-m3
 
-然后设置好自己的知识库目录地址，大模型的API Key和Embedding模型的API Key就可以了。
+然后设置好自己的知识库目录地址，大模型的API Key和Embedding模型（建议使用智谱的Embedding模型）的API Key就可以了。
 
 # 执行
 ```shell
