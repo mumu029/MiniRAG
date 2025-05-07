@@ -3,19 +3,16 @@ import numpy as np
 import json
 
 class Config:
-    llm = OpenAI(
-        api_key="sk-FlBILdgNXRuEVga1dUCAKVTfefIpk70gsYMXBp1kGMntOoYd",
-        base_url="https://purple-newapi.lemongpt.top/v1"
-    )
+
     llm_name = "deepseek-ai/DeepSeek-V3"
-    # llm = OpenAI(
-    #     api_key="123",
-    #     base_url="http://127.0.0.1:8001/v1"
-    # )
+    llm = OpenAI(
+        api_key="123",
+        base_url="http://127.0.0.1:8001/v1"
+    )
 
     
     embedding = OpenAI(
-        api_key="47574ee5b23f4dbc54795df954f6844f.ZYw81XNiQIiybbOU",
+        api_key="",
         base_url="https://open.bigmodel.cn/api/paas/v4",
     )
     embedding_name = "embedding-3"
