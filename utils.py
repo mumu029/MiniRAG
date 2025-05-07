@@ -71,7 +71,8 @@ def read_pdf_file(file_path: str, chunk_size = 0, overlap = 0) -> str:
 def updata_database(folder_path: str, config) -> dict:
 
     import os
-
+    if not os.path.exists(os.path.join(folder_path, "chunk_txt")):
+        os.makedirs(os.path.join(folder_path, "chunk_txt"))
     already_files = [x.split(".")[0] for x in os.listdir(os.path.join(folder_path, "chunk_txt"))]
     files = {}
     for file in os.listdir(os.path.join(folder_path, "source_file")):
